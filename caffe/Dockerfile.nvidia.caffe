@@ -1,0 +1,19 @@
+# Docker build of simple caffe based demos for x86, using nvidia/caffe
+# and python 2.7
+FROM nvidia/caffe
+
+RUN apt-get update && apt-get install -y git python-matplotlib python-opencv vim wget
+ENV CAFFE_ROOT=/usr/lib/python2.7/dist-packages/caffe
+RUN mkdir -p /src
+WORKDIR /src
+RUN git clone https://github.com/Banus/caffe-demo.git
+WORKDIR /src/caffe-demo/models
+#RUN git checkout d1d8dfe && git fetch
+#RUN git reset --hard d1d8dfe
+RUN chmod +x download_models.sh && ./download_models.sh all
+WORKDIR /src/caffe-demo
+
+## TODO: download Yolo models (and resolve blob mismatch, so they actually work)
+##  convert models: https://github.com/xingwangsfu/caffe-yolo
+COPY demo/*.caffemodel /src/caffe-demo/models/yolo/
+
