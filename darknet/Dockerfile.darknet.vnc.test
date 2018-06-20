@@ -1,0 +1,30 @@
+# Build from base face-classification image
+FROM openhorizon/amd64_darknet_nvidia-socket:8.0-cudnn7-devel-ubuntu16.04
+
+# AUTHORS michaeldye, chrod
+MAINTAINER nuculur@gmail.com
+
+# Install VNC libs
+RUN apt-get update && apt-get install -y --no-install-recommends \
+				xvfb \
+				xauth \
+				x11vnc \
+				x11-utils \
+				x11-xserver-utils \
+				x11-apps
+
+# start x11vnc and expose its port
+ENV DISPLAY :0.0
+EXPOSE 5900
+COPY vnc/entrypoint-x11.sh /entrypoint.sh
+COPY start.sh /start.sh
+RUN chmod +x /entrypoint.sh && chmod +x /start.sh
+
+# Prep volumes for VNC
+RUN mkdir /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix && chown root /tmp/.X11-unix
+
+# VNC prep and exec script args
+CMD ["/entrypoint.sh", "/start.sh"]
+
+## For docker --squash build
+RUN apt-get autoremove -y && apt-get clean -y

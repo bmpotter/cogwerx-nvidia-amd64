@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y git pkg-config wget libopencv-dev
 
 WORKDIR /
 # Clone darknet with mod to produce small output json file with prediction values
-RUN git clone https://github.com/chrod/darknet.git
+RUN git clone -b socket https://github.com/chrod/darknet.git
 WORKDIR /darknet
 COPY darknet-build/Makefile /darknet/Makefile
 
