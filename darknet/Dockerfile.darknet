@@ -1,13 +1,12 @@
 # Base image: start with CUDA libs, using nvidia runtime
-#FROM openhorizon/amd64_vi_caffe_nvidia:8.6.0
-FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
 
 #AUTHOR bmwshop@gmail.com
 MAINTAINER nuculur@gmail.com
 
 # this installs darknet: http://pjreddie.com/darknet/install/
 # and then configures the tiny model for yolo
-RUN apt-get update && apt-get install -y git pkg-config wget libopencv-dev
+RUN apt-get update && apt-get install -y git pkg-config wget libcanberra-gtk-module libopencv-dev
 
 WORKDIR /
 # Clone darknet with mod to produce small output json file with prediction values
@@ -20,6 +19,8 @@ RUN make -j4
 
 # Fetch weights files
 RUN wget http://pjreddie.com/media/files/yolov3.weights
+RUN wget https://pjreddie.com/media/files/yolov3-tiny.weights
+RUN wget https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3-tiny.cfg -O /darknet/cfg/yolov3-tiny.cfg
 
 # Start command (checks existence of DARKNET_CAMERA environment variable)
 COPY start.sh /start.sh
@@ -29,10 +30,11 @@ CMD ["/bin/bash", "/start.sh"]
 # Squash build (remove extra junk)
 RUN apt-get -y autoremove && apt-get -y clean
 
-# Build:
-# docker build --no-cache --squash -f Dockerfile.darknet -t openhorizon/amd64_darknet_nvidia:8.0-cudnn7-devel-ubuntu16.04 .
+## Build:
+## docker build --no-cache --squash -f Dockerfile.darknet -t openhorizon/amd64-nvidia-darknet:cuda9.0-cudnn7-16.04 .
 
-# now assuming you have an attached webcam (not the itegrated one, which is typically cam 0 (/dev/video0))
-# xhost + && docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64_darknet_nvidia:8.0-cudnn7-devel-ubuntu16.04 ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights 
-# or to test on one picture (it works even if you don't have X)
-# docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64_darknet_nvidia:8.0-cudnn7-devel-ubuntu16.04 ./darknet yolo test cfg/coco.data cfg/yolov3.cfg yolov3.weights data/person.jpg
+## Test:
+##  now assuming you have an attached webcam (not the integrated one, which is typically cam 0 (/dev/video0))
+#xhost + && nvidia-docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64-nvidia-darknet:cuda9.0-cudnn7-16.04 ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights
+#   or to test on one picture (it works even if you don't have X). This example uses yolov3-tiny.
+#nvidia-docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64-nvidia-darknet:cuda9.0-cudnn7-16.04 ./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpg
