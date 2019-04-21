@@ -30,7 +30,7 @@ CMD ["/bin/bash", "/start.sh"]
 # Squash build (remove extra junk)
 RUN apt-get -y autoremove && apt-get -y clean
 
-# now assuming you have an attached webcam (not the itegrated one, which is typically cam 0 (/dev/video0))
-# xhost + && docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64_vi_darknet_nvidia:8.6.0 ./darknet detector demo cfg/tiny-yolo-voc.cfg tiny-yolo-voc.weights 
-# or to test on one picture (it works even if you don't have X)
-# docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64_vi_darknet_nvidia:8.6.0 ./darknet yolo test cfg/tiny-yolo.cfg tiny-yolo.weights data/person.jpg
+# now assuming you have an attached webcam, say via USB (not an itegrated one, which is typically cam 0 (/dev/video0))
+# xhost + && docke --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64-nvidia-darknet:cuda9.0-cudnn7-16.04 ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights 
+# To test on one picture, shows the picture in Xwindows (works even if you don't have X)
+# xhost + && docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64-nvidia-darknet:cuda9.0-cudnn7-16.04 ./darknet yolo test cfg/yolov3-tiny.cfg yolov3-tiny.weights data/person.jpg
