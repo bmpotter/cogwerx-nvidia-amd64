@@ -2,7 +2,7 @@
 
 ## Darknet
 
-### Setup on AMD 64, with NVIDIA GPU
+### Setup on Ubuntu 16/18, AMD 64, with NVIDIA GPU
 0. (If you wish to build the container yourself) Clone this repo
 1. Install [docker-ce](https://docs.docker.com/install/linux/docker-ce/ubuntu/) or [docker-ee](https://docs.docker.com/install/linux/docker-ee/ubuntu/)
 2. Install [NVIDIA Drivers](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#ubuntu-installation) and [CUDA libraries](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu) (at least CUDA version 9.0)
