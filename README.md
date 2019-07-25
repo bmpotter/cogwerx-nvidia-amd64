@@ -20,7 +20,7 @@
 ```
 ### Run (with USB webcam, or without)
 Assuming you have an attached webcam, say via USB (not an itegrated one, which is typically cam 0 (/dev/video0))    
-`xhost + && docke --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64-nvidia-darknet:cuda9.0-cudnn7-16.04 ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights`    
+`xhost + && docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64-nvidia-darknet:cuda9.0-cudnn7-16.04 ./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights`    
 
 To test on one picture, shows the picture in Xwindows (works even if you don't have X)    
 `xhost + && docker run --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --rm openhorizon/amd64-nvidia-darknet:cuda9.0-cudnn7-16.04 ./darknet yolo test cfg/yolov3-tiny.cfg yolov3-tiny.weights data/person.jpg`   
